@@ -1,0 +1,3 @@
+Sqlite3 database adapter. To use, run
+  node-waf configure build
+from current folder

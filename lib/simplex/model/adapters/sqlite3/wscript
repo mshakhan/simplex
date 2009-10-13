@@ -1,0 +1,29 @@
+import os 
+
+srcdir = '.'
+blddir = 'build'
+VERSION = '0.0.1'
+
+def set_options(opt):
+  opt.tool_options('compiler_cxx')
+
+def configure(conf):
+  conf.check_tool('compiler_cxx')
+  conf.check_tool('node_addon')
+  conf.env.append_value("LIBPATH_SQLITE", "/usr/local/lib")
+  conf.env.append_value("LIB_SQLITE", "sqlite3")
+    
+def build(bld):
+  obj = bld.new_task_gen('cxx', 'shlib', 'sqlite3', 'node_addon')
+  obj.target = 'binding'
+  obj.source = "binding.cc"
+  obj.uselib = "SQLITE"
+
+def shutdown():
+  import Options, shutil
+  if not Options.commands['clean']:
+    if os.path.exists('build/default/binding.node'):
+      shutil.copy('build/default/binding.node', 'binding.node')
+  else:
+    if os.path.exists('binding.node'):
+      os.unlink('binding.node')
